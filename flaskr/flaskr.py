@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, g
+from flask import Flask, g, render_template
 
 app = Flask(__name__)
 # TODO print out the name of this app ?
@@ -51,3 +51,15 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
+
+@app.route('/')
+def show_entries():
+    db = get_db()
+    cur = db.execute('select title, text from entries order by id desc')
+    entries = cur.fetchall()
+    return render_template('show_entries.html', entries=entries)
+
+
+@app.route('/add', method=['POST'])
+def add_entries():
+    pass
