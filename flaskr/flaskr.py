@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, g
+from flask import *
 
 app = Flask(__name__)
 # TODO print out the name of this app ?
@@ -51,3 +51,47 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
+
+@app.route('/')
+def show_entries():
+    db = get_db()
+    # a better way instead of executing the raw SQL
+    cur = db.execute('select title, text from entries order by id desc')
+    entries = cur.fetchall()
+    return render_template('show_entries.html', entries=entries)
+
+
+@app.route('/add', methods=['POST'])
+def add_entries():
+    if not session.get('logged_in'):
+        abort(401)
+    db = get_db()
+    db.execute('insert into entries (title, text) values (?, ?)',
+               [request.form['title'], request.form['text']])
+    db.commit()
+    # where will this flash add to the template
+    flash('New entry was successfully posted')
+    redirect(url_for('show_entries'))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != app.config['USERNAME']:
+            error = 'Invalid username'
+        elif request.form['password'] != app.config['PASSWORD']:
+            error = 'Invalid password'
+        else:
+            # how will production do for sessionize logged in and how to handle different user
+            session['logged_in'] = True
+            flash('You were logged in')
+            return redirect(url_for('show_entries'))
+    return render_template('login.html', error=error)
+
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash('You were logged out')
+    return redirect(url_for('show_entries'))
