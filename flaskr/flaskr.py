@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, g, render_template
+from flask import *
 
 app = Flask(__name__)
 # TODO print out the name of this app ?
@@ -55,6 +55,7 @@ def close_db(error):
 @app.route('/')
 def show_entries():
     db = get_db()
+    # a better way instead of executing the raw SQL
     cur = db.execute('select title, text from entries order by id desc')
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
@@ -62,4 +63,15 @@ def show_entries():
 
 @app.route('/add', method=['POST'])
 def add_entries():
-    pass
+    if not session.get('logged_in'):
+        abort(401)
+    db = get_db()
+    db.execute('insert into entries (title, text) values (?, ?)',
+               [request.form['title'], request.form['text']])
+    db.commit()
+    # where will this flash add to the template
+    flash('New entry was successfully posted')
+    redirect(url_for('show_entries'))
+
+# TODO add login and logout
+
