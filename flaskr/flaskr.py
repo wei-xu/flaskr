@@ -58,10 +58,10 @@ def show_entries():
     # a better way instead of executing the raw SQL
     cur = db.execute('select title, text from entries order by id desc')
     entries = cur.fetchall()
-    return render_template('layout.html', entries=entries)
+    return render_template('show_entries.html', entries=entries)
 
 
-@app.route('/add', method=['POST'])
+@app.route('/add', methods=['POST'])
 def add_entries():
     if not session.get('logged_in'):
         abort(401)
@@ -74,7 +74,6 @@ def add_entries():
     redirect(url_for('show_entries'))
 
 
-# TODO add login and logout
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
