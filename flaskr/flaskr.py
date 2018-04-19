@@ -71,7 +71,7 @@ def add_entries():
     db.commit()
     # where will this flash add to the template
     flash('New entry was successfully posted')
-    redirect(url_for('show_entries'))
+    return redirect(url_for('show_entries'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
