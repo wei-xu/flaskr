@@ -1,8 +1,18 @@
-from .flaskr import app
-
 import os
 from flask import Flask
 
+"""
+# How to run this app
+
+export FLASK_APP=flaskr
+export FLASK_ENV=dev
+flask run
+# or publicly visible
+flask run --host 0.0.0.0
+
+# What if I want to run two apps simultaneously 
+
+"""
 
 def create_app(test_config=None):
     # create and configure the app
@@ -27,8 +37,12 @@ def create_app(test_config=None):
         pass
 
     # a simple page that says hello
-    @app.route('hello')
+    @app.route('/hello')
     def hello():
         return 'Hello, World!'
+
+    from . import db
+
+    db.init_app(app)
 
     return app
