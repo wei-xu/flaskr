@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, flash, g, redirect, url_for, abort
 
-from flaskr.db import get_db_connection
+from db import get_db_connection
 
-from flaskr.auth import login_required
+from auth import login_required
 
 bp = Blueprint('blog', __name__)
 
