@@ -10,7 +10,7 @@ flask run
 # or publicly visible
 flask run --host 0.0.0.0
 
-# What if I want to run two apps simultaneously 
+
 
 """
 
@@ -42,10 +42,17 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
+    # import db logic
     from . import db
     db.init_app(app)
 
+    # import authentication logic
     from . import auth
     app.register_blueprint(auth.bp)
+
+    # import main blog logic
+    from . import blog
+    app.register_blueprint(blog.bp)
+    app.add_url_rule('/', endpoint='index')
 
     return app

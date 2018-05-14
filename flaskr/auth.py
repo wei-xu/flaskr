@@ -1,7 +1,7 @@
 from flask import (
-    Blueprint, request, flash, redirect, url_for, render_template, session
+    Blueprint, request, flash, redirect, url_for, render_template, session, g
 )
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from .db import get_db_connection
 
@@ -54,10 +54,10 @@ def login():
         db = get_db_connection()
 
         user = db.execute(
-            'SELECT * FROM user WHERE username = {} AND password = {}'.format(username, generate_password_hash(pw))
+            'SELECT * FROM user WHERE username = ?', (username, )
         ).fetchone()
 
-        if not user:
+        if not user or not check_password_hash(user['password'], pw):
             error = 'Either username or password is incorrect'
 
         if error is None:
