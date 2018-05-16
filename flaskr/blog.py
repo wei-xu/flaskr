@@ -51,7 +51,7 @@ def create():
         else:
             db = get_db_connection()
             db.execute(
-                'INSERT INTO posts (title, body, author_id) '
+                'INSERT INTO post (title, body, author_id) '
                 'VALUES (?, ?, ?)',
                 (title, body, g.user['id'])
             )
@@ -87,7 +87,7 @@ def update(id):
             db.commit()
             return redirect(url_for('blog.index'))
 
-    return render_template('blog.update.html', post=post)
+    return render_template('blog/update.html', post=post)
 
 
 @bp.route('/<int:id>/delete', methods=['POST', ])
@@ -97,7 +97,7 @@ def delete(id):
     get_post(id)
     db = get_db_connection()
     db.execute(
-        'DELETE FROM posts WHERE id = ?',
+        'DELETE FROM post WHERE id = ?',
         (id, )
     )
     db.commit()
