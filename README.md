@@ -31,3 +31,4 @@ or publicly visible
 # TODO
 - set login failure flash to GET method so refreshing doesn't submit the same POST request
 - markdown editor
+- javascript rewrite
