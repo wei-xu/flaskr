@@ -25,7 +25,10 @@ or publicly visible
 
 # Question
 
-- What if I want to run two ap``ps simultaneously
+- What if I want to run two apps simultaneously
 - How `app.add_url_route` works
 
 # TODO
+- set login failure flash to GET method so refreshing doesn't submit the same POST request
+- markdown editor
+- javascript rewrite
